@@ -1184,8 +1184,13 @@ export interface MetaCatalogProduct {
   retailer_id: string
   name: string
   description?: string
-  /** Display string, e.g. "₹1,290.00". */
+  /**
+   * Display string, e.g. "₹1,290.00". When the item is on sale this is
+   * the regular ("was") price; the discounted price is in `sale_price`.
+   */
   price?: string
+  /** Display string of the discounted price, when the item is on sale. */
+  sale_price?: string
   currency?: string
   availability?: string
   image_url?: string
@@ -1207,6 +1212,7 @@ const CATALOG_PRODUCT_FIELDS = [
   'name',
   'description',
   'price',
+  'sale_price',
   'currency',
   'availability',
   'image_url',

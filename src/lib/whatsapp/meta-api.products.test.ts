@@ -113,6 +113,7 @@ describe('listCatalogProducts', () => {
     vi.stubGlobal('fetch', fetchMock)
     const items = await listCatalogProducts({ catalogId: 'cat', accessToken: 'tok' })
     expect(items.map((i) => i.retailer_id)).toEqual(['a', 'c'])
+    expect(fetchMock.mock.calls[0][0]).toContain('sale_price')
     expect(fetchMock.mock.calls[1][0]).toBe('https://graph.facebook.com/next-page')
   })
 

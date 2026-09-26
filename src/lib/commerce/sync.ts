@@ -21,14 +21,18 @@ export function toCatalogRow(
   syncedAt: string,
 ) {
   const blank = (v: string | undefined) => (v && v.trim() ? v.trim() : null)
+  // On sale, Meta's `price` is the "was" price; cache what customers actually pay.
+  const regular = parseMetaPrice(item.price)
+  const sale = parseMetaPrice(item.sale_price)
+  const onSale = sale != null && (regular == null || sale < regular)
   return {
     account_id: accountId,
     retailer_id: item.retailer_id,
     item_group_id: blank(item.retailer_product_group_id),
     name: item.name.trim(),
     description: blank(item.description),
-    price_text: blank(item.price),
-    price_amount: parseMetaPrice(item.price),
+    price_text: blank(onSale ? item.sale_price : item.price),
+    price_amount: onSale ? sale : regular,
     currency: blank(item.currency),
     availability: blank(item.availability)?.toLowerCase() ?? null,
     image_url: blank(item.image_url),
