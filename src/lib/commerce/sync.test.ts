@@ -71,6 +71,23 @@ describe('toCatalogRow', () => {
   })
 })
 
+describe('toCatalogRow sale price', () => {
+  const row = (price?: string, sale_price?: string) =>
+    toCatalogRow('acct', { retailer_id: 'flower-puff-peach-tee__4Y', name: 'Tee', price, sale_price }, 'T')
+
+  it('caches the sale price when the item is on sale', () => {
+    expect(row('₹1,290.00', ' ₹850.00 ')).toMatchObject({ price_text: '₹850.00', price_amount: 850 })
+  })
+
+  it('keeps the regular price when there is no sale price', () => {
+    expect(row('₹1,290.00')).toMatchObject({ price_text: '₹1,290.00', price_amount: 1290 })
+  })
+
+  it('ignores a sale price higher than the regular price', () => {
+    expect(row('₹1,290.00', '₹1,500.00')).toMatchObject({ price_text: '₹1,290.00', price_amount: 1290 })
+  })
+})
+
 describe('syncCatalog', () => {
   it('upserts the catalog, deletes stale rows and stamps the sync time', async () => {
     h.listCatalogProducts.mockResolvedValue([
